@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_books"
+        android:icon="@android:drawable/ic_menu_agenda"
+        android:title="Sách" />
+    <item
+        android:id="@+id/nav_podcourse"
+        android:icon="@android:drawable/ic_menu_slideshow"
+        android:title="PodCourse" />
+    <item
+        android:id="@+id/nav_explore"
+        android:icon="@android:drawable/ic_menu_search"
+        android:title="Khám phá" />
+    <item
+        android:id="@+id/nav_challenge"
+        android:icon="@android:drawable/ic_menu_compass"
+        android:title="Thử thách" />
+    <item
+        android:id="@+id/nav_library"
+        android:icon="@android:drawable/ic_menu_gallery"
+        android:title="Thư viện" />
+</menu>

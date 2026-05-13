@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand Palette -->
+    <color name="brand_navy">#2B3B52</color> <!-- Deep Navy for headers -->
+    <color name="brand_orange">#FF7E5F</color> <!-- Soft Orange primary -->
+    <color name="brand_light_gray">#F5F7FA</color>
+    <color name="brand_text_navy">#1F2C3D</color>
+    <color name="brand_text_gray">#7A869A</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="primary">@color/brand_orange</color>
+
+    <!-- Backgrounds -->
+    <color name="background_pastel">#FFFBF7</color> <!-- Very soft warm white -->
+    <color name="surface_white">#FFFFFF</color>
+
+    <!-- Text -->
+    <color name="text_navy">#1A237E</color> <!-- Dark Navy -->
+    <color name="text_secondary">#546E7A</color>
+
+    <!-- Accents -->
+    <color name="sepia_bg">#F4ECD8</color>
+    <color name="sepia_text">#5B4636</color>
+    <color name="soft_shadow">#1A000000</color>
+</resources>
