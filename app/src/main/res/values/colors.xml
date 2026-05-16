@@ -1,26 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Brand Palette -->
-    <color name="brand_navy">#2B3B52</color> <!-- Deep Navy for headers -->
-    <color name="brand_orange">#FF7E5F</color> <!-- Soft Orange primary -->
-    <color name="brand_light_gray">#F5F7FA</color>
-    <color name="brand_text_navy">#1F2C3D</color>
-    <color name="brand_text_gray">#7A869A</color>
+    <!-- Foliana-inspired dark theme -->
+
+    <!-- Backgrounds -->
+    <color name="background_dark">#121212</color>
+    <color name="background_pastel">#121212</color>
+    <color name="brand_navy">#121212</color>
+
+    <!-- Purple accents -->
+    <color name="brand_purple">#9C27B0</color>
+    <color name="brand_purple_dark">#7B1FA2</color>
+    <color name="brand_purple_deep">#4A2B8C</color>
+    <color name="brand_orange">@color/brand_purple</color>
+
+    <!-- Green accent (badges, ratings) -->
+    <color name="brand_green">#4CAF50</color>
+
+    <!-- Surfaces -->
+    <color name="surface_card">#1E1E1E</color>
+    <color name="surface_white">#1E1E1E</color>
+    <color name="surface_elevated">#2A2A2A</color>
+    <color name="brand_light_gray">#1E1E1E</color>
+    <color name="chip_inactive_bg">#2A2A2A</color>
+
+    <!-- Text -->
+    <color name="brand_text_navy">#FFFFFF</color>
+    <color name="brand_text_gray">#B0B0B0</color>
+    <color name="text_navy">#FFFFFF</color>
+    <color name="text_secondary">#B0B0B0</color>
+    <color name="text_on_primary">#FFFFFF</color>
+    <color name="text_on_primary_muted">#B0B0B0</color>
+    <color name="tab_unselected">#80FFFFFF</color>
 
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
-    <color name="primary">@color/brand_orange</color>
+    <color name="primary">@color/brand_purple</color>
 
-    <!-- Backgrounds -->
-    <color name="background_pastel">#FFFBF7</color> <!-- Very soft warm white -->
-    <color name="surface_white">#FFFFFF</color>
+    <!-- Borders & dividers -->
+    <color name="stroke_subtle">#33FFFFFF</color>
+    <color name="divider">#2A2A2A</color>
+    <color name="placeholder">#3A3A3A</color>
+    <color name="icon_muted">#666666</color>
 
-    <!-- Text -->
-    <color name="text_navy">#1A237E</color> <!-- Dark Navy -->
-    <color name="text_secondary">#546E7A</color>
+    <!-- Category tiles -->
+    <color name="category_audiobook">#7B1FA2</color>
+    <color name="category_english">#4A2B8C</color>
+    <color name="category_summary">#E65100</color>
+    <color name="category_podcast">#2E7D32</color>
 
-    <!-- Accents -->
-    <color name="sepia_bg">#F4ECD8</color>
-    <color name="sepia_text">#5B4636</color>
-    <color name="soft_shadow">#1A000000</color>
+    <!-- Reading mode -->
+    <color name="sepia_bg">#1A1814</color>
+    <color name="sepia_text">#D4C4A8</color>
+    <color name="reading_toolbar">#CC1E1E1E</color>
+
+    <color name="soft_shadow">#40000000</color>
+    <color name="error_red">#F44336</color>
 </resources>

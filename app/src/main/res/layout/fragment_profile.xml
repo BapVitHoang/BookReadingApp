@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/brand_navy">
+    android:background="@drawable/bg_header_gradient">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -24,7 +24,7 @@
                 android:padding="4dp"
                 android:src="@android:drawable/ic_menu_myplaces"
                 app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
-                app:strokeColor="@color/brand_orange"
+                app:strokeColor="@color/brand_purple"
                 app:strokeWidth="2dp" />
 
             <TextView
@@ -40,7 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Thành viên Đồng"
-                android:textColor="#B0FFFFFF"
+                android:textColor="@color/text_on_primary_muted"
                 android:textSize="14sp" />
         </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
@@ -81,7 +81,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="12"
-                            android:textColor="@color/brand_orange"
+                            android:textColor="@color/brand_green"
                             android:textStyle="bold" />
                         <TextView
                             android:layout_width="wrap_content"
@@ -110,7 +110,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="450"
-                            android:textColor="@color/brand_orange"
+                            android:textColor="@color/brand_green"
                             android:textStyle="bold" />
                         <TextView
                             android:layout_width="wrap_content"
@@ -136,7 +136,8 @@
                 android:layout_marginTop="12dp"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="0dp"
-                app:strokeColor="#EEE"
+                app:cardBackgroundColor="@color/surface_card"
+                app:strokeColor="@color/stroke_subtle"
                 app:strokeWidth="1dp">
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -150,7 +151,7 @@
                         android:text="Chỉnh sửa hồ sơ"
                         android:drawableEnd="@android:drawable/ic_menu_edit" />
 
-                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEE" />
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -159,14 +160,14 @@
                         android:text="Đổi mật khẩu"
                         android:drawableEnd="@android:drawable/ic_lock_lock" />
 
-                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEE" />
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="16dp"
                         android:text="Đăng xuất"
-                        android:textColor="#F44336" />
+                        android:textColor="@color/error_red" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

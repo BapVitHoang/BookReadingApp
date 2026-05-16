@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/brand_navy">
+    android:background="@drawable/bg_header_gradient">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -30,7 +30,7 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="#EEE" />
+                    android:background="@color/placeholder" />
             </com.google.android.material.card.MaterialCardView>
 
             <LinearLayout
@@ -63,7 +63,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="Mentor: Nguyễn Văn B"
-                    android:textColor="#B0FFFFFF"
+                    android:textColor="@color/text_on_primary_muted"
                     android:textSize="14sp" />
             </LinearLayout>
         </LinearLayout>
@@ -130,7 +130,7 @@
                     app:tint="@color/brand_orange" />
             </LinearLayout>
 
-            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEE" android:layout_marginTop="12dp" />
+            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider" android:layout_marginTop="12dp" />
 
             <!-- Lesson List Item 2 -->
             <LinearLayout

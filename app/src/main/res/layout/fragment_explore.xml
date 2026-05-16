@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/brand_navy">
+    android:background="@drawable/bg_header_gradient">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -53,7 +53,8 @@
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="0dp"
-                app:strokeColor="#EEEEEE"
+                app:cardBackgroundColor="@color/surface_card"
+                app:strokeColor="@color/stroke_subtle"
                 app:strokeWidth="1dp">
 
                 <LinearLayout
@@ -92,7 +93,7 @@
                     android:layout_height="100dp"
                     android:layout_columnWeight="1"
                     android:layout_margin="6dp"
-                    app:cardBackgroundColor="#5D4037"
+                    app:cardBackgroundColor="@color/category_audiobook"
                     app:cardCornerRadius="8dp">
                     <TextView
                         android:layout_width="wrap_content"
@@ -109,7 +110,7 @@
                     android:layout_height="100dp"
                     android:layout_columnWeight="1"
                     android:layout_margin="6dp"
-                    app:cardBackgroundColor="#512DA8"
+                    app:cardBackgroundColor="@color/category_english"
                     app:cardCornerRadius="8dp">
                     <TextView
                         android:layout_width="wrap_content"

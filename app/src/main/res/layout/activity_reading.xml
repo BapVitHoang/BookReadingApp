@@ -10,19 +10,19 @@
         android:id="@+id/reading_app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#CCFFFFFF"
+        android:background="@color/reading_toolbar"
         app:layout_constraintTop_toTopOf="parent">
         <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:navigationIcon="@android:drawable/ic_menu_revert"
-            app:navigationIconTint="@color/brand_text_navy">
+            app:navigationIconTint="@color/sepia_text">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="Chương 1: Khởi đầu"
-                android:textColor="@color/brand_text_navy"
+                android:textColor="@color/sepia_text"
                 android:textStyle="bold" />
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
@@ -81,8 +81,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:progress="15"
-                android:progressTint="@color/brand_orange"
-                android:thumbTint="@color/brand_orange" />
+                android:progressTint="@color/brand_purple"
+                android:thumbTint="@color/brand_purple" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -94,7 +94,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@android:drawable/ic_menu_sort_by_size"
-                    app:tint="@color/brand_text_navy" />
+                    app:tint="@color/sepia_text" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -109,7 +109,7 @@
                     android:layout_height="24dp"
                     android:layout_alignParentEnd="true"
                     android:src="@android:drawable/btn_star_big_off"
-                    app:tint="@color/brand_text_navy" />
+                    app:tint="@color/sepia_text" />
             </RelativeLayout>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
