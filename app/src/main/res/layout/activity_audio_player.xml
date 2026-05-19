@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_header_gradient">
+    android:background="@color/brand_navy">
 
     <!-- Header -->
     <androidx.appcompat.widget.Toolbar
@@ -36,7 +36,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/placeholder"
+            android:background="#DDD"
             android:scaleType="centerCrop" />
     </com.google.android.material.card.MaterialCardView>
 
@@ -61,7 +61,7 @@
         android:layout_marginTop="8dp"
         android:gravity="center"
         android:text="Tác giả sách"
-        android:textColor="@color/text_on_primary_muted"
+        android:textColor="#B0FFFFFF"
         android:textSize="16sp"
         app:layout_constraintTop_toBottomOf="@id/player_title" />
 
@@ -89,13 +89,13 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="12:45"
-            android:textColor="@color/tab_unselected"
+            android:textColor="#80FFFFFF"
             android:textSize="12sp" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="45:20"
-            android:textColor="@color/tab_unselected"
+            android:textColor="#80FFFFFF"
             android:textSize="12sp" />
     </LinearLayout>
 

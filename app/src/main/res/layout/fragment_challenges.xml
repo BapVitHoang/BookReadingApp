@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_header_gradient">
+    android:background="@color/brand_navy">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -38,8 +38,7 @@
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="2dp"
-                app:cardBackgroundColor="@color/surface_card"
-                app:strokeColor="@color/stroke_subtle"
+                app:strokeColor="#EEE"
                 app:strokeWidth="1dp">
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -59,9 +58,9 @@
                         android:layout_gravity="center"
                         android:layout_margin="20dp"
                         android:progress="60"
-                        app:indicatorColor="@color/brand_purple"
+                        app:indicatorColor="@color/brand_orange"
                         app:indicatorSize="120dp"
-                        app:trackColor="@color/surface_elevated"
+                        app:trackColor="#EEE"
                         app:trackThickness="12dp" />
 
                     <TextView
@@ -69,7 +68,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text="18 / 30 phút"
-                        android:textColor="@color/brand_green"
+                        android:textColor="@color/brand_orange"
                         android:textSize="20sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -102,12 +101,11 @@
                         android:layout_width="60dp"
                         android:layout_height="60dp"
                         android:src="@android:drawable/btn_star_big_on"
-                        app:tint="@color/brand_purple" />
+                        app:tint="@color/brand_orange" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Độc giả mới"
-                        android:textColor="@color/brand_text_gray"
                         android:textSize="12sp"
                         android:gravity="center" />
                 </LinearLayout>
@@ -123,7 +121,7 @@
                         android:layout_width="60dp"
                         android:layout_height="60dp"
                         android:src="@android:drawable/btn_star_big_on"
-                        app:tint="@color/icon_muted" />
+                        app:tint="#DDD" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -143,7 +141,7 @@
                         android:layout_width="60dp"
                         android:layout_height="60dp"
                         android:src="@android:drawable/btn_star_big_on"
-                        app:tint="@color/icon_muted" />
+                        app:tint="#DDD" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

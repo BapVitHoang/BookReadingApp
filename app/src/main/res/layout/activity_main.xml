@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_header_gradient">
+    android:background="@color/brand_navy">
 
     <!-- Header Section -->
     <com.google.android.material.appbar.AppBarLayout
@@ -41,7 +41,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
-                app:strokeColor="@color/stroke_subtle"
+                app:strokeColor="#50FFFFFF"
                 app:strokeWidth="1dp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -50,12 +50,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            app:tabIndicatorColor="@color/brand_purple"
+            app:tabIndicatorColor="@color/brand_orange"
             app:tabIndicatorFullWidth="false"
             app:tabIndicatorHeight="3dp"
             app:tabMode="fixed"
             app:tabSelectedTextColor="@color/white"
-            app:tabTextColor="@color/tab_unselected">
+            app:tabTextColor="#90FFFFFF">
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
@@ -88,15 +88,47 @@
             android:orientation="vertical"
             android:paddingBottom="100dp">
 
-            <!-- Featured books carousel (snap center, equal size per page) -->
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/featured_pager"
+            <!-- Carousel -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="320dp"
+                android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="20dp"
-                android:clipChildren="false"
-                android:clipToPadding="false"
-                android:overScrollMode="never" />
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#EEE"
+                    android:scaleType="centerCrop"
+                    android:src="@android:drawable/ic_menu_gallery" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:layout_gravity="bottom"
+                    android:background="@drawable/bottom_fade_gradient" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/brand_orange"
+                        android:paddingHorizontal="8dp"
+                        android:paddingVertical="2dp"
+                        android:text="BÁN CHẠY NHẤT"
+                        android:textColor="@color/white"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- Book List Section -->
             <TextView
@@ -130,7 +162,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <!-- Book Item 1 -->
+                    <!-- Book Item -->
                     <LinearLayout
                         android:layout_width="140dp"
                         android:layout_height="wrap_content"
@@ -140,16 +172,12 @@
                         <com.google.android.material.card.MaterialCardView
                             android:layout_width="140dp"
                             android:layout_height="180dp"
-                            app:cardBackgroundColor="@color/surface_card"
                             app:cardCornerRadius="8dp"
                             app:cardElevation="2dp">
-
                             <ImageView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:contentDescription="@string/book_kiep_nao"
-                                android:scaleType="centerCrop"
-                                android:src="@drawable/kiep_nao_ta_cung_tim_thay_nhau" />
+                                android:background="#DDD" />
                         </com.google.android.material.card.MaterialCardView>
 
                         <TextView
@@ -158,7 +186,7 @@
                             android:layout_marginTop="8dp"
                             android:ellipsize="end"
                             android:maxLines="2"
-                            android:text="@string/title_kiep_nao"
+                            android:text="Tên sách ví dụ 1"
                             android:textColor="@color/brand_text_navy"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -173,16 +201,12 @@
                         <com.google.android.material.card.MaterialCardView
                             android:layout_width="140dp"
                             android:layout_height="180dp"
-                            app:cardBackgroundColor="@color/surface_card"
                             app:cardCornerRadius="8dp"
                             app:cardElevation="2dp">
-
                             <ImageView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:contentDescription="@string/book_neu_biet"
-                                android:scaleType="centerCrop"
-                                android:src="@drawable/neu_biet_tram_nam_la_huu_han" />
+                                android:background="#DDD" />
                         </com.google.android.material.card.MaterialCardView>
 
                         <TextView
@@ -191,73 +215,7 @@
                             android:layout_marginTop="8dp"
                             android:ellipsize="end"
                             android:maxLines="2"
-                            android:text="@string/title_neu_biet"
-                            android:textColor="@color/brand_text_navy"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <!-- Book Item 3 -->
-                    <LinearLayout
-                        android:layout_width="140dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="16dp"
-                        android:orientation="vertical">
-
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="140dp"
-                            android:layout_height="180dp"
-                            app:cardBackgroundColor="@color/surface_card"
-                            app:cardCornerRadius="8dp"
-                            app:cardElevation="2dp">
-
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:contentDescription="@string/book_duoc_hoc"
-                                android:scaleType="centerCrop"
-                                android:src="@drawable/bia_duoc_hoc" />
-                        </com.google.android.material.card.MaterialCardView>
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:ellipsize="end"
-                            android:maxLines="2"
-                            android:text="@string/title_duoc_hoc"
-                            android:textColor="@color/brand_text_navy"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <!-- Book Item 4 -->
-                    <LinearLayout
-                        android:layout_width="140dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="16dp"
-                        android:orientation="vertical">
-
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="140dp"
-                            android:layout_height="180dp"
-                            app:cardBackgroundColor="@color/surface_card"
-                            app:cardCornerRadius="8dp"
-                            app:cardElevation="2dp">
-
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:contentDescription="@string/book_chuyen_nho"
-                                android:scaleType="centerCrop"
-                                android:src="@drawable/chuyen_nho_sai_gon_bao_no" />
-                        </com.google.android.material.card.MaterialCardView>
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:ellipsize="end"
-                            android:maxLines="2"
-                            android:text="@string/title_chuyen_nho"
+                            android:text="Tên sách ví dụ 2"
                             android:textColor="@color/brand_text_navy"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -272,9 +230,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="@color/background_dark"
-        app:itemIconTint="@color/bottom_nav_item_color"
-        app:itemTextColor="@color/bottom_nav_item_color"
+        android:background="@color/white"
+        app:itemIconTint="@color/brand_text_gray"
+        app:itemTextColor="@color/brand_text_gray"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/bottom_nav_menu" />
 

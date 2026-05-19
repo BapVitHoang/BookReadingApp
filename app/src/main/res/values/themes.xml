@@ -1,29 +1,18 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="Base.Theme.BookReadingApp" parent="Theme.Material3.Dark.NoActionBar">
-        <item name="colorPrimary">@color/brand_purple</item>
-        <item name="colorOnPrimary">@color/white</item>
-        <item name="colorPrimaryContainer">@color/brand_purple_deep</item>
-        <item name="colorOnPrimaryContainer">@color/white</item>
-        <item name="colorSecondary">@color/brand_green</item>
-        <item name="colorOnSecondary">@color/white</item>
-        <item name="colorSurface">@color/surface_card</item>
-        <item name="colorOnSurface">@color/white</item>
-        <item name="colorSurfaceVariant">@color/surface_elevated</item>
-        <item name="colorOnSurfaceVariant">@color/brand_text_gray</item>
-        <item name="android:colorBackground">@color/background_dark</item>
-        <item name="android:windowBackground">@color/background_dark</item>
-        <item name="android:statusBarColor">@color/background_dark</item>
-        <item name="android:navigationBarColor">@color/background_dark</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+    <!-- Base application theme. -->
+    <style name="Base.Theme.BookReadingApp" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="android:windowBackground">@color/background_pastel</item>
+        <item name="android:statusBarColor">@color/background_pastel</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
     </style>
 
     <style name="Theme.BookReadingApp" parent="Base.Theme.BookReadingApp" />
 
+    <!-- Rounded Card Style -->
     <style name="Widget.BookReadingApp.CardView" parent="Widget.Material3.CardView.Elevated">
-        <item name="cardCornerRadius">16dp</item>
-        <item name="cardElevation">0dp</item>
-        <item name="cardBackgroundColor">@color/surface_card</item>
-        <item name="strokeColor">@color/stroke_subtle</item>
-        <item name="strokeWidth">1dp</item>
+        <item name="cardCornerRadius">24dp</item>
+        <item name="cardElevation">2dp</item>
     </style>
 </resources>

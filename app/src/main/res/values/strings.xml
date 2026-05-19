@@ -1,13 +1,3 @@
 <resources>
     <string name="app_name">BookReadingApp</string>
-    <string name="bestseller_cover">Bìa sách Sapiens - Lược sử loài người</string>
-    <string name="book_duoc_hoc">Được học</string>
-    <string name="book_chuyen_nho">Chuyện nhỏ Sài Gòn báo nổ</string>
-    <string name="book_kiep_nao">Kiếp nào ta cũng tìm thấy nhau</string>
-    <string name="book_neu_biet">Nếu biết trăm năm là hữu hạn</string>
-    <string name="title_duoc_hoc">Được học</string>
-    <string name="title_chuyen_nho">Chuyện nhỏ Sài Gòn báo nổ</string>
-    <string name="title_kiep_nao">Kiếp nào ta cũng tìm thấy nhau</string>
-    <string name="title_neu_biet">Nếu biết trăm năm là hữu hạn</string>
-    <string name="title_sapiens">Sapiens - Lược sử loài người</string>
 </resources>
