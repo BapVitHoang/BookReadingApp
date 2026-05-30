@@ -11,15 +11,35 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.BookReadingApp">
+
+        <!-- Màn hình Đăng nhập (Launcher) -->
         <activity
-            android:name=".MainActivity"
+            android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Màn hình chính -->
+        <activity android:name=".MainActivity" android:exported="false" />
+
+        <!-- Màn hình Đăng ký -->
+        <activity android:name=".RegisterActivity" android:exported="false" />
+
+        <!-- Màn hình Chi tiết sách -->
+        <activity android:name=".BookDetailActivity" android:exported="false" />
+
+        <!-- Màn hình Đọc sách -->
+        <activity android:name=".ReadingActivity" android:exported="false" />
+
+        <!-- Màn hình Nghe sách -->
+        <activity android:name=".AudioPlayerActivity" android:exported="false" />
+
+        <!-- Màn hình Chi tiết PodCourse -->
+        <activity android:name=".PodCourseDetailActivity" android:exported="false" />
+
     </application>
 
 </manifest>

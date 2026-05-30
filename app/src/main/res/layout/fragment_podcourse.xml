@@ -103,6 +103,7 @@
 
                     <!-- Course Item 1 -->
                     <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/card_podcourse_1"
                         android:layout_width="260dp"
                         android:layout_height="160dp"
                         android:layout_marginEnd="16dp"
