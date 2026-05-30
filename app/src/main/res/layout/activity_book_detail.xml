@@ -154,7 +154,31 @@
                 android:text="Đây là mô tả chi tiết về nội dung cuốn sách. Cuốn sách này sẽ mang lại cho bạn những kiến thức bổ ích và trải nghiệm đọc tuyệt vời..."
                 android:textColor="@color/brand_text_gray" />
 
+            <TextView
+                android:id="@+id/tv_continue_reading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Continue Reading: 0%"
+                android:textColor="@color/brand_orange"
+                android:textStyle="bold"
+                android:textSize="16sp" />
+
             <!-- Primary Action -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_favorite"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginTop="12dp"
+                android:text="♡ Thêm vào yêu thích"
+                android:textAllCaps="false"
+                android:textColor="@color/brand_orange"
+                android:textSize="14sp"
+                app:backgroundTint="@android:color/transparent"
+                app:cornerRadius="16dp"
+                app:strokeColor="@color/brand_orange"
+                app:strokeWidth="1dp" />
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_read_now"
                 android:layout_width="match_parent"

@@ -124,12 +124,12 @@
                 android:src="@android:drawable/ic_menu_send" />
 
             <TextView
+                android:id="@+id/tv_recently_opened"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="Bạn chưa có nội dung nào"
+                android:text="Recently Opened: Chưa có sách nào"
                 android:textColor="@color/brand_text_navy"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
