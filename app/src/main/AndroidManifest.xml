@@ -48,6 +48,10 @@
             android:exported="false"
             android:foregroundServiceType="mediaPlayback" />
 
+        <service
+            android:name=".service.ReadingSyncService"
+            android:exported="false" />
+
     </application>
 
 </manifest>

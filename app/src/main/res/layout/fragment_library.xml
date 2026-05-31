@@ -127,7 +127,7 @@
                 android:id="@+id/tv_recently_opened"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Recently Opened: Chưa có sách nào"
+                android:text="Mở gần đây: Chưa có sách nào"
                 android:textColor="@color/brand_text_navy"
                 android:textSize="16sp"
                 android:textStyle="bold" />

@@ -34,7 +34,11 @@ public class LibraryFragment extends Fragment {
     private void loadRecentlyOpenedBook() {
         String lastBook = StorageManager.getLastBook(requireContext());
 
-        tvRecentlyOpened.setText("Recently Opened: " + lastBook);
+        if ("Chưa có sách nào được mở gần đây".equals(lastBook)) {
+            tvRecentlyOpened.setText("Mở gần đây: Chưa có sách nào");
+        } else {
+            tvRecentlyOpened.setText("Mở gần đây: " + lastBook);
+        }
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.hcmute.bookreadingapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -7,6 +8,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.hcmute.bookreadingapp.service.ReadingSyncService;
 import com.hcmute.bookreadingapp.storage.StorageManager;
 
 public class ReadingActivity extends AppCompatActivity {
@@ -25,20 +27,13 @@ public class ReadingActivity extends AppCompatActivity {
         readingSeekBar = findViewById(R.id.reading_seek_bar);
         tvPageProgress = findViewById(R.id.tv_page_progress);
 
+        StorageManager.saveLastBook(this, bookTitle);
         loadSavedProgress();
 
         readingSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 updatePageText(progress);
-
-                if (fromUser) {
-                    StorageManager.saveReadingProgress(
-                            ReadingActivity.this,
-                            bookTitle,
-                            progress
-                    );
-                }
             }
 
             @Override
@@ -48,16 +43,11 @@ public class ReadingActivity extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 int progress = seekBar.getProgress();
-
-                StorageManager.saveReadingProgress(
-                        ReadingActivity.this,
-                        bookTitle,
-                        progress
-                );
+                syncProgressInBackground(progress);
 
                 Toast.makeText(
                         ReadingActivity.this,
-                        "Đã lưu tiến độ đọc: " + progress + "%",
+                        "Đang đồng bộ tiến độ đọc: " + progress + "%",
                         Toast.LENGTH_SHORT
                 ).show();
             }
@@ -83,14 +73,17 @@ public class ReadingActivity extends AppCompatActivity {
         );
     }
 
+    private void syncProgressInBackground(int progress) {
+        Intent intent = new Intent(this, ReadingSyncService.class);
+        intent.putExtra(ReadingSyncService.EXTRA_BOOK_TITLE, bookTitle);
+        intent.putExtra(ReadingSyncService.EXTRA_PROGRESS, progress);
+        intent.putExtra(ReadingSyncService.EXTRA_SAVE_LAST_BOOK, true);
+        startService(intent);
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
-
-        StorageManager.saveReadingProgress(
-                this,
-                bookTitle,
-                readingSeekBar.getProgress()
-        );
+        syncProgressInBackground(readingSeekBar.getProgress());
     }
 }
