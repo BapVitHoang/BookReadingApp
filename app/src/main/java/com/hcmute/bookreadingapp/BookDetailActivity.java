@@ -2,77 +2,37 @@ package com.hcmute.bookreadingapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
-
+import android.widget.TextView;
 import com.google.android.material.button.MaterialButton;
-import com.hcmute.bookreadingapp.storage.StorageManager;
 
 public class BookDetailActivity extends AppCompatActivity {
-
-    private TextView tvContinueReading;
-    private MaterialButton btnReadNow;
-
-    private MaterialButton btnFavorite;
-
-    private final String bookTitle = "Tên Cuốn Sách";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_detail);
 
-        tvContinueReading = findViewById(R.id.tv_continue_reading);
-        btnReadNow = findViewById(R.id.btn_read_now);
-        btnFavorite = findViewById(R.id.btn_favorite);
+        TextView tvTitle = findViewById(R.id.tv_detail_title);
+        TextView tvAuthor = findViewById(R.id.tv_detail_author);
+        TextView tvDescription = findViewById(R.id.tv_detail_description);
+        MaterialButton btnReadNow = findViewById(R.id.btn_read_now);
 
-        loadReadingProgress();
-        loadFavoriteStatus();
+        // Lấy dữ liệu sách từ Intent
+        com.hcmute.bookreadingapp.model.Book book = (com.hcmute.bookreadingapp.model.Book) getIntent().getSerializableExtra("book");
+
+        if (book != null) {
+            tvTitle.setText(book.getTitle() != null ? book.getTitle() : "Tên cuốn sách");
+            tvAuthor.setText("Tác giả: " + (book.getAuthor() != null ? book.getAuthor() : "Đang cập nhật"));
+            tvDescription.setText(book.getDescription() != null ? book.getDescription() : "Đang cập nhật mô tả...");
+        }
 
         btnReadNow.setOnClickListener(v -> {
-            StorageManager.saveLastBook(this, bookTitle);
             Intent intent = new Intent(BookDetailActivity.this, ReadingActivity.class);
+            if (book != null) {
+                intent.putExtra("book", book);
+            }
             startActivity(intent);
         });
-
-        btnFavorite.setOnClickListener(v -> {
-            boolean currentStatus = StorageManager.isFavorite(this, bookTitle);
-
-            StorageManager.saveFavorite(
-                    this,
-                    bookTitle,
-                    !currentStatus
-            );
-
-            loadFavoriteStatus();
-        });
-    }
-
-    private void loadReadingProgress() {
-        int progress = StorageManager.getReadingProgress(this, bookTitle);
-
-        tvContinueReading.setText(
-                "Continue Reading: " + progress + "%"
-        );
-    }
-
-    private void loadFavoriteStatus() {
-        boolean isFavorite = StorageManager.isFavorite(this, bookTitle);
-
-        if (isFavorite) {
-            btnFavorite.setText("♥ Đã thêm vào yêu thích");
-        } else {
-            btnFavorite.setText("♡ Thêm vào yêu thích");
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        loadReadingProgress();
-
-        loadFavoriteStatus();
     }
 }

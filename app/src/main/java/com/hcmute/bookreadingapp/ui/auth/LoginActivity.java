@@ -1,5 +1,5 @@
 package com.hcmute.bookreadingapp.ui.auth;
-import com.hcmute.bookreadingapp.ui.main.MainActivity;
+import com.hcmute.bookreadingapp.MainActivity;
 import com.hcmute.bookreadingapp.ui.auth.RegisterActivity;
 
 import com.hcmute.bookreadingapp.R;

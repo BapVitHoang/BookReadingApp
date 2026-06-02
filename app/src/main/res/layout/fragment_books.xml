@@ -146,79 +146,14 @@
                 android:textColor="@color/brand_text_gray"
                 android:textSize="13sp" />
 
-            <HorizontalScrollView
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_books"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:clipToPadding="false"
                 android:paddingHorizontal="20dp"
-                android:scrollbars="none">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <!-- Book Item -->
-                    <LinearLayout
-                        android:id="@+id/layout_book_item"
-                        android:layout_width="140dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="16dp"
-                        android:orientation="vertical">
-
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="140dp"
-                            android:layout_height="180dp"
-                            app:cardCornerRadius="8dp"
-                            app:cardElevation="2dp">
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:background="#DDD" />
-                        </com.google.android.material.card.MaterialCardView>
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:ellipsize="end"
-                            android:maxLines="2"
-                            android:text="Tên sách ví dụ 1"
-                            android:textColor="@color/brand_text_navy"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <!-- Book Item 2 -->
-                    <LinearLayout
-                        android:layout_width="140dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="16dp"
-                        android:orientation="vertical">
-
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="140dp"
-                            android:layout_height="180dp"
-                            app:cardCornerRadius="8dp"
-                            app:cardElevation="2dp">
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:background="#DDD" />
-                        </com.google.android.material.card.MaterialCardView>
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:ellipsize="end"
-                            android:maxLines="2"
-                            android:text="Tên sách ví dụ 2"
-                            android:textColor="@color/brand_text_navy"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-                </LinearLayout>
-            </HorizontalScrollView>
+                android:scrollbars="none" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

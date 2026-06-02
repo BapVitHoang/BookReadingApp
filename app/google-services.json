@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "483939455051",
+    "project_id": "bookreadingapp-35917",
+    "storage_bucket": "bookreadingapp-35917.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:483939455051:android:412e63a2f5bc030b47fdce",
+        "android_client_info": {
+          "package_name": "com.hcmute.bookreadingapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVFS-nVE4MzksSq15cRJUmqOdQsB9tzLg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

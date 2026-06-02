@@ -18,6 +18,7 @@
             app:navigationIcon="@android:drawable/ic_menu_revert"
             app:navigationIconTint="@color/brand_text_navy">
             <TextView
+                android:id="@+id/tv_reading_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -42,21 +43,12 @@
             android:paddingBottom="100dp">
 
             <TextView
+                android:id="@+id/tv_reading_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="serif"
                 android:lineSpacingExtra="10dp"
                 android:text="Đây là nội dung của cuốn sách mà bạn đang đọc. Chữ được trình bày với font Serif truyền thống giúp mắt dễ chịu hơn khi đọc lâu. Khoảng cách dòng được nới rộng để tăng khả năng tập trung.\n\nBạn có thể vuốt lên xuống để đọc nội dung tiếp theo. Hệ thống sẽ tự động ghi nhớ vị trí cuối cùng bạn dừng lại để lần sau quay lại đúng chỗ đó."
-                android:textColor="@color/sepia_text"
-                android:textSize="18sp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:fontFamily="serif"
-                android:lineSpacingExtra="10dp"
-                android:text="Dòng chữ tiếp theo mô tả về hành trình của nhân vật chính trong một thế giới đầy màu sắc và những điều kỳ thú đang chờ đợi phía trước..."
                 android:textColor="@color/sepia_text"
                 android:textSize="18sp" />
         </LinearLayout>
