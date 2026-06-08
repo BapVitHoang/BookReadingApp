@@ -1,4 +1,4 @@
-package com.hcmute.bookreadingapp.data.repository;
+package com.hcmute.bookreadingapp.repository;
 
 import android.util.Log;
 
@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BookRepository {
+
     private static final String TAG = "BookRepository";
     private final FirebaseFirestore db;
 
@@ -18,19 +19,21 @@ public class BookRepository {
         db = FirebaseFirestore.getInstance();
     }
 
-    // Interface callback để trả dữ liệu về sau khi fetch xong (vì Firebase chạy bất đồng bộ)
     public interface OnBooksFetchedListener {
         void onSuccess(List<Book> books);
+
         void onFailure(Exception e);
     }
 
     public interface OnBookFetchedListener {
         void onSuccess(Book book);
+
         void onFailure(Exception e);
     }
 
     public interface OnFeaturedBooksFetchedListener {
         void onSuccess(List<FeaturedBook> books);
+
         void onFailure(Exception e);
     }
 
@@ -41,9 +44,7 @@ public class BookRepository {
                     if (task.isSuccessful()) {
                         List<Book> bookList = new ArrayList<>();
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            // Tự động map dữ liệu từ document sang object Book
                             Book book = document.toObject(Book.class);
-                            // Gắn id của document vào object
                             book.setId(document.getId());
                             bookList.add(book);
                         }

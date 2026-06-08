@@ -1,9 +1,12 @@
-package com.hcmute.bookreadingapp;
+package com.hcmute.bookreadingapp.view.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.LinearLayout;
+
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.hcmute.bookreadingapp.R;
 
 public class PodCourseDetailActivity extends AppCompatActivity {
 

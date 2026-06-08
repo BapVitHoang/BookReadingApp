@@ -1,4 +1,4 @@
-package com.hcmute.bookreadingapp.ui.adapter;
+package com.hcmute.bookreadingapp.view.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;

@@ -1,12 +1,8 @@
-package com.hcmute.bookreadingapp;
+package com.hcmute.bookreadingapp.view.activity;
 
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Looper;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +20,14 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
+import com.hcmute.bookreadingapp.R;
+import com.hcmute.bookreadingapp.controller.AudioPlaybackController;
 import com.hcmute.bookreadingapp.service.AudioService;
+import com.hcmute.bookreadingapp.view.fragment.BooksFragment;
+import com.hcmute.bookreadingapp.view.fragment.ChallengesFragment;
+import com.hcmute.bookreadingapp.view.fragment.ExploreFragment;
+import com.hcmute.bookreadingapp.view.fragment.LibraryFragment;
+import com.hcmute.bookreadingapp.view.fragment.PodCourseFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,84 +39,62 @@ public class MainActivity extends AppCompatActivity {
     private TextView tvMiniTitle;
     private TextView tvMiniSubtitle;
     private ImageButton btnMiniPlayPause;
-    private ImageButton btnMiniRewind;
 
-    private AudioService audioService;
-    private boolean bound = false;
+    private AudioPlaybackController playbackController;
 
     private final Handler uiHandler = new Handler(Looper.getMainLooper());
     private final Runnable progressUpdater = new Runnable() {
         @Override
         public void run() {
-            if (bound && audioService != null && audioService.isPrepared()) {
-                updateMiniPlayerProgress(
-                        audioService.getCurrentPosition(),
-                        audioService.getDuration()
-                );
-                if (audioService.isPlaying()) {
+            AudioService service = playbackController.getService();
+            if (service != null && service.isPrepared()) {
+                updateMiniPlayerProgress(service.getCurrentPosition(), service.getDuration());
+                if (service.isPlaying()) {
                     uiHandler.postDelayed(this, 500);
                 }
             }
         }
     };
 
-    private final ServiceConnection serviceConnection = new ServiceConnection() {
+    private final AudioService.PlaybackListener playbackListener = new AudioService.PlaybackListener() {
         @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            AudioService.AudioBinder binder = (AudioService.AudioBinder) service;
-            audioService = binder.getService();
-            bound = true;
-
-            audioService.setPlaybackListener(new AudioService.PlaybackListener() {
-                @Override
-                public void onPrepared(int duration) {
-                    runOnUiThread(() -> {
-                        updateMiniPlayer();
-                        updateMiniPlayerProgress(0, duration);
-                    });
-                }
-
-                @Override
-                public void onError(String message) {
-                    runOnUiThread(() -> hideMiniPlayer());
-                }
-
-                @Override
-                public void onPlaybackComplete() {
-                    runOnUiThread(() -> {
-                        uiHandler.removeCallbacks(progressUpdater);
-                        hideMiniPlayer();
-                    });
-                }
-
-                @Override
-                public void onPlaybackStateChanged(boolean isPlaying) {
-                    runOnUiThread(() -> {
-                        updateMiniPlayerPlayButton(isPlaying);
-                        if (isPlaying) {
-                            uiHandler.post(progressUpdater);
-                        } else {
-                            uiHandler.removeCallbacks(progressUpdater);
-                            if (audioService != null) {
-                                updateMiniPlayerProgress(
-                                        audioService.getCurrentPosition(),
-                                        audioService.getDuration()
-                                );
-                            }
-                        }
-                    });
-                }
+        public void onPrepared(int duration) {
+            runOnUiThread(() -> {
+                updateMiniPlayer();
+                updateMiniPlayerProgress(0, duration);
             });
-
-            updateMiniPlayer();
         }
 
         @Override
-        public void onServiceDisconnected(ComponentName name) {
-            bound = false;
-            audioService = null;
-            uiHandler.removeCallbacks(progressUpdater);
-            hideMiniPlayer();
+        public void onError(String message) {
+            runOnUiThread(() -> hideMiniPlayer());
+        }
+
+        @Override
+        public void onPlaybackComplete() {
+            runOnUiThread(() -> {
+                uiHandler.removeCallbacks(progressUpdater);
+                hideMiniPlayer();
+            });
+        }
+
+        @Override
+        public void onPlaybackStateChanged(boolean isPlaying) {
+            runOnUiThread(() -> {
+                updateMiniPlayerPlayButton(isPlaying);
+                if (isPlaying) {
+                    uiHandler.post(progressUpdater);
+                } else {
+                    uiHandler.removeCallbacks(progressUpdater);
+                    AudioService service = playbackController.getService();
+                    if (service != null) {
+                        updateMiniPlayerProgress(
+                                service.getCurrentPosition(),
+                                service.getDuration()
+                        );
+                    }
+                }
+            });
         }
     };
 
@@ -122,6 +103,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         setContentView(R.layout.activity_main);
+
+        playbackController = new AudioPlaybackController(this);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.fragment_container), (view, windowInsets) -> {
             Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars());
@@ -171,28 +154,27 @@ public class MainActivity extends AppCompatActivity {
         tvMiniTitle = findViewById(R.id.tv_mini_title);
         tvMiniSubtitle = findViewById(R.id.tv_mini_subtitle);
         btnMiniPlayPause = findViewById(R.id.btn_mini_play_pause);
-        btnMiniRewind = findViewById(R.id.btn_mini_rewind);
+        ImageButton btnMiniRewind = findViewById(R.id.btn_mini_rewind);
 
         miniPlayerInfo.setOnClickListener(v -> openFullPlayer());
 
         btnMiniPlayPause.setOnClickListener(v -> {
-            if (!bound || audioService == null) {
+            AudioService service = playbackController.getService();
+            if (service == null) {
                 return;
             }
-            if (audioService.isPlaying()) {
-                audioService.pauseAudio();
+            if (service.isPlaying()) {
+                playbackController.pause();
             } else {
-                audioService.playAudio();
+                playbackController.play();
             }
         });
 
         btnMiniRewind.setOnClickListener(v -> {
-            if (bound && audioService != null) {
-                audioService.rewind15Seconds();
-                updateMiniPlayerProgress(
-                        audioService.getCurrentPosition(),
-                        audioService.getDuration()
-                );
+            AudioService service = playbackController.getService();
+            if (service != null) {
+                playbackController.rewind15Seconds();
+                updateMiniPlayerProgress(service.getCurrentPosition(), service.getDuration());
             }
         });
     }
@@ -200,47 +182,48 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Intent intent = new Intent(this, AudioService.class);
-        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+        playbackController.bind(new AudioPlaybackController.ServiceCallback() {
+            @Override
+            public void onServiceConnected(AudioService service) {
+                service.setPlaybackListener(playbackListener);
+                updateMiniPlayer();
+            }
+
+            @Override
+            public void onServiceDisconnected() {
+                uiHandler.removeCallbacks(progressUpdater);
+                hideMiniPlayer();
+            }
+        });
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         uiHandler.removeCallbacks(progressUpdater);
-
-        if (bound) {
-            if (audioService != null) {
-                audioService.setPlaybackListener(null);
-            }
-            unbindService(serviceConnection);
-            bound = false;
-            audioService = null;
-        }
+        playbackController.unbind();
     }
 
     private void updateMiniPlayer() {
-        if (!bound || audioService == null || !audioService.hasActiveTrack()) {
+        AudioService service = playbackController.getService();
+        if (service == null || !service.hasActiveTrack()) {
             hideMiniPlayer();
             return;
         }
 
         miniPlayer.setVisibility(View.VISIBLE);
-        tvMiniTitle.setText(audioService.getCurrentTitle());
-        tvMiniSubtitle.setText(audioService.getCurrentSubtitle());
-        updateMiniPlayerPlayButton(audioService.isPlaying());
+        tvMiniTitle.setText(service.getCurrentTitle());
+        tvMiniSubtitle.setText(service.getCurrentSubtitle());
+        updateMiniPlayerPlayButton(service.isPlaying());
 
-        updateMiniPlayerProgress(
-                audioService.getCurrentPosition(),
-                audioService.getDuration()
-        );
+        updateMiniPlayerProgress(service.getCurrentPosition(), service.getDuration());
 
-        if (audioService.isPlaying()) {
+        if (service.isPlaying()) {
             uiHandler.removeCallbacks(progressUpdater);
             uiHandler.post(progressUpdater);
         }
 
-        String coverUrl = audioService.getCurrentCoverUrl();
+        String coverUrl = service.getCurrentCoverUrl();
         if (coverUrl != null && !coverUrl.isEmpty()) {
             Glide.with(this)
                     .load(coverUrl)
@@ -294,14 +277,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void openFullPlayer() {
-        if (!bound || audioService == null || !audioService.hasActiveTrack()) {
+        AudioService service = playbackController.getService();
+        if (service == null || !service.hasActiveTrack()) {
             return;
         }
 
         Intent intent = new Intent(this, AudioPlayerActivity.class);
-        intent.putExtra(AudioPlayerActivity.EXTRA_AUDIO_URL, audioService.getOriginalAudioUrl());
-        intent.putExtra(AudioPlayerActivity.EXTRA_TITLE, audioService.getCurrentTitle());
-        intent.putExtra(AudioPlayerActivity.EXTRA_COVER_URL, audioService.getCurrentCoverUrl());
+        intent.putExtra(AudioPlayerActivity.EXTRA_AUDIO_URL, service.getOriginalAudioUrl());
+        intent.putExtra(AudioPlayerActivity.EXTRA_TITLE, service.getCurrentTitle());
+        intent.putExtra(AudioPlayerActivity.EXTRA_COVER_URL, service.getCurrentCoverUrl());
         startActivity(intent);
     }
 }

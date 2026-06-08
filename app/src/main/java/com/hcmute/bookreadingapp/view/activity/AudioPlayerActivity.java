@@ -1,15 +1,10 @@
-package com.hcmute.bookreadingapp;
+package com.hcmute.bookreadingapp.view.activity;
 
 import android.Manifest;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Looper;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -23,6 +18,9 @@ import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.hcmute.bookreadingapp.R;
+import com.hcmute.bookreadingapp.controller.AudioPlaybackController;
+import com.hcmute.bookreadingapp.model.AudioTrack;
 import com.hcmute.bookreadingapp.service.AudioService;
 
 public class AudioPlayerActivity extends AppCompatActivity {
@@ -47,106 +45,83 @@ public class AudioPlayerActivity extends AppCompatActivity {
     private boolean isPlaying = false;
     private boolean userSeeking = false;
 
-    private AudioService audioService;
-    private boolean bound = false;
+    private AudioPlaybackController playbackController;
 
     private final Handler uiHandler = new Handler(Looper.getMainLooper());
     private final Runnable progressUpdater = new Runnable() {
         @Override
         public void run() {
-            if (!bound || audioService == null) {
+            AudioService audioService = playbackController.getService();
+            if (audioService == null) {
                 return;
             }
 
             if (audioService.isPrepared()) {
-                int position = audioService.getCurrentPosition();
-                int duration = audioService.getDuration();
-                updateProgressUi(position, duration);
+                updateProgressUi(audioService.getCurrentPosition(), audioService.getDuration());
             }
 
-            // Keep ticking while playback is intended, even while the track is
-            // still loading on the very first play (isPrepared == false). Once
-            // the track becomes prepared, the timer syncs automatically.
             if (isPlaying || audioService.isPlaying()) {
                 uiHandler.postDelayed(this, 500);
             }
         }
     };
 
-    private void startProgressUpdates() {
-        uiHandler.removeCallbacks(progressUpdater);
-        uiHandler.post(progressUpdater);
-    }
-
-    private final ServiceConnection serviceConnection = new ServiceConnection() {
+    private final AudioService.PlaybackListener playbackListener = new AudioService.PlaybackListener() {
         @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            AudioService.AudioBinder binder = (AudioService.AudioBinder) service;
-            audioService = binder.getService();
-            bound = true;
-
-            audioService.setPlaybackListener(new AudioService.PlaybackListener() {
-                @Override
-                public void onPrepared(int duration) {
-                    runOnUiThread(() -> {
-                        seekBar.setMax(duration);
-                        tvTotalTime.setText(formatTime(duration));
-                        if (audioService != null && audioService.isPlaying()) {
-                            isPlaying = true;
-                            btnPlayPause.setImageResource(android.R.drawable.ic_media_pause);
-                            tvPlaybackStatus.setText("Đang phát...");
-                            startProgressUpdates();
-                        } else {
-                            tvPlaybackStatus.setText("Sẵn sàng phát");
-                        }
-                    });
-                }
-
-                @Override
-                public void onError(String message) {
-                    runOnUiThread(() -> {
-                        isPlaying = false;
-                        btnPlayPause.setImageResource(android.R.drawable.ic_media_play);
-                        tvPlaybackStatus.setText(message);
-                        Toast.makeText(AudioPlayerActivity.this, message, Toast.LENGTH_LONG).show();
-                    });
-                }
-
-                @Override
-                public void onPlaybackComplete() {
-                    runOnUiThread(() -> {
-                        isPlaying = false;
-                        btnPlayPause.setImageResource(android.R.drawable.ic_media_play);
-                        tvPlaybackStatus.setText("Đã phát xong");
-                        uiHandler.removeCallbacks(progressUpdater);
-                    });
-                }
-
-                @Override
-                public void onPlaybackStateChanged(boolean playing) {
-                    runOnUiThread(() -> {
-                        isPlaying = playing;
-                        btnPlayPause.setImageResource(
-                                playing ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play
-                        );
-                        if (playing) {
-                            tvPlaybackStatus.setText("Đang phát...");
-                            startProgressUpdates();
-                        } else if (audioService != null && audioService.isPrepared()) {
-                            tvPlaybackStatus.setText("Đã tạm dừng");
-                            uiHandler.removeCallbacks(progressUpdater);
-                        }
-                    });
+        public void onPrepared(int duration) {
+            runOnUiThread(() -> {
+                seekBar.setMax(duration);
+                tvTotalTime.setText(formatTime(duration));
+                AudioService service = playbackController.getService();
+                if (service != null && service.isPlaying()) {
+                    isPlaying = true;
+                    btnPlayPause.setImageResource(android.R.drawable.ic_media_pause);
+                    tvPlaybackStatus.setText("Đang phát...");
+                    startProgressUpdates();
+                } else {
+                    tvPlaybackStatus.setText("Sẵn sàng phát");
                 }
             });
-
-            syncUiWithService();
         }
 
         @Override
-        public void onServiceDisconnected(ComponentName name) {
-            bound = false;
-            audioService = null;
+        public void onError(String message) {
+            runOnUiThread(() -> {
+                isPlaying = false;
+                btnPlayPause.setImageResource(android.R.drawable.ic_media_play);
+                tvPlaybackStatus.setText(message);
+                Toast.makeText(AudioPlayerActivity.this, message, Toast.LENGTH_LONG).show();
+            });
+        }
+
+        @Override
+        public void onPlaybackComplete() {
+            runOnUiThread(() -> {
+                isPlaying = false;
+                btnPlayPause.setImageResource(android.R.drawable.ic_media_play);
+                tvPlaybackStatus.setText("Đã phát xong");
+                uiHandler.removeCallbacks(progressUpdater);
+            });
+        }
+
+        @Override
+        public void onPlaybackStateChanged(boolean playing) {
+            runOnUiThread(() -> {
+                isPlaying = playing;
+                btnPlayPause.setImageResource(
+                        playing ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play
+                );
+                if (playing) {
+                    tvPlaybackStatus.setText("Đang phát...");
+                    startProgressUpdates();
+                } else {
+                    AudioService service = playbackController.getService();
+                    if (service != null && service.isPrepared()) {
+                        tvPlaybackStatus.setText("Đã tạm dừng");
+                    }
+                    uiHandler.removeCallbacks(progressUpdater);
+                }
+            });
         }
     };
 
@@ -155,6 +130,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
         requestNotificationPermission();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_audio_player);
+
+        playbackController = new AudioPlaybackController(this);
 
         readIntentExtras();
 
@@ -177,10 +154,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
     }
 
     private void readIntentExtras() {
-        Intent intent = getIntent();
-        audioUrl = intent.getStringExtra(EXTRA_AUDIO_URL);
-        title = intent.getStringExtra(EXTRA_TITLE);
-        coverUrl = intent.getStringExtra(EXTRA_COVER_URL);
+        audioUrl = getIntent().getStringExtra(EXTRA_AUDIO_URL);
+        title = getIntent().getStringExtra(EXTRA_TITLE);
+        coverUrl = getIntent().getStringExtra(EXTRA_COVER_URL);
     }
 
     private void bindBookInfo() {
@@ -221,34 +197,24 @@ public class AudioPlayerActivity extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 userSeeking = false;
-                if (bound && audioService != null) {
-                    audioService.seekTo(seekBar.getProgress());
-                }
+                playbackController.seekTo(seekBar.getProgress());
             }
         });
     }
 
     private void togglePlayback() {
-        if (audioUrl == null || audioUrl.isEmpty()) {
+        AudioTrack track = new AudioTrack(audioUrl, title, coverUrl, "Đang phát sách nói");
+        if (!track.hasAudioUrl()) {
             Toast.makeText(this, "Chưa có link audio cho sách này", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        Intent serviceIntent = new Intent(this, AudioService.class);
-        serviceIntent.putExtra(AudioService.EXTRA_AUDIO_URL, audioUrl);
-        serviceIntent.putExtra(AudioService.EXTRA_TITLE, title);
-        serviceIntent.putExtra(AudioService.EXTRA_COVER_URL, coverUrl);
-        serviceIntent.putExtra(AudioService.EXTRA_SUBTITLE, "Đang phát sách nói");
-
         if (!isPlaying) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                startForegroundService(serviceIntent);
-            } else {
-                startService(serviceIntent);
-            }
+            playbackController.startTrack(track);
 
-            if (bound && audioService != null && audioService.isPrepared()) {
-                audioService.playAudio();
+            AudioService service = playbackController.getService();
+            if (service != null && service.isPrepared()) {
+                playbackController.play();
             }
 
             isPlaying = true;
@@ -256,10 +222,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             tvPlaybackStatus.setText("Đang tải audio...");
             startProgressUpdates();
         } else {
-            if (bound && audioService != null) {
-                audioService.pauseAudio();
-            }
-
+            playbackController.pause();
             isPlaying = false;
             btnPlayPause.setImageResource(android.R.drawable.ic_media_play);
             tvPlaybackStatus.setText("Đã tạm dừng");
@@ -270,38 +233,47 @@ public class AudioPlayerActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Intent intent = new Intent(this, AudioService.class);
-        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+        playbackController.bind(new AudioPlaybackController.ServiceCallback() {
+            @Override
+            public void onServiceConnected(AudioService service) {
+                service.setPlaybackListener(playbackListener);
+                syncUiWithService();
+            }
+
+            @Override
+            public void onServiceDisconnected() {
+                uiHandler.removeCallbacks(progressUpdater);
+            }
+        });
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         uiHandler.removeCallbacks(progressUpdater);
-
-        if (bound) {
-            if (audioService != null) {
-                audioService.setPlaybackListener(null);
-            }
-            unbindService(serviceConnection);
-            bound = false;
-        }
+        playbackController.unbind();
     }
 
     private void syncUiWithService() {
-        if (audioService != null && audioService.isPrepared()) {
-            int duration = audioService.getDuration();
+        AudioService service = playbackController.getService();
+        if (service != null && service.isPrepared()) {
+            int duration = service.getDuration();
             seekBar.setMax(duration);
             tvTotalTime.setText(formatTime(duration));
-            updateProgressUi(audioService.getCurrentPosition(), duration);
+            updateProgressUi(service.getCurrentPosition(), duration);
         }
 
-        if (audioService != null && audioService.isPlaying()) {
+        if (service != null && service.isPlaying()) {
             isPlaying = true;
             btnPlayPause.setImageResource(android.R.drawable.ic_media_pause);
             tvPlaybackStatus.setText("Đang phát...");
             startProgressUpdates();
         }
+    }
+
+    private void startProgressUpdates() {
+        uiHandler.removeCallbacks(progressUpdater);
+        uiHandler.post(progressUpdater);
     }
 
     private void updateProgressUi(int position, int duration) {

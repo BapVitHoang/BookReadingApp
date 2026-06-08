@@ -1,20 +1,25 @@
-package com.hcmute.bookreadingapp;
+package com.hcmute.bookreadingapp.view.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
 import com.google.android.material.card.MaterialCardView;
+import com.hcmute.bookreadingapp.R;
+import com.hcmute.bookreadingapp.view.activity.PodCourseDetailActivity;
 
 public class PodCourseFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_podcourse, container, false);
 
         MaterialCardView podCourseCard = view.findViewById(R.id.card_podcourse_1);

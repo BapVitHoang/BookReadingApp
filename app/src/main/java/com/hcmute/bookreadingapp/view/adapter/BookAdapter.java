@@ -1,10 +1,11 @@
-package com.hcmute.bookreadingapp.ui.adapter;
+package com.hcmute.bookreadingapp.view.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -46,7 +47,6 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
         holder.tvTitle.setText(book.getTitle());
         holder.tvAuthor.setText(book.getAuthor());
 
-        // Load ảnh cover từ URL (internet) bằng Glide
         if (book.getCoverUrl() != null && !book.getCoverUrl().isEmpty()) {
             Glide.with(holder.itemView.getContext())
                     .load(book.getCoverUrl())
@@ -75,7 +75,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
         TextView tvTitle;
         TextView tvAuthor;
 
-        public BookViewHolder(@NonNull View itemView) {
+        BookViewHolder(@NonNull View itemView) {
             super(itemView);
             imgCover = itemView.findViewById(R.id.img_book_cover);
             tvTitle = itemView.findViewById(R.id.tv_book_title);

@@ -7,7 +7,7 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
-import com.hcmute.bookreadingapp.storage.StorageManager;
+import com.hcmute.bookreadingapp.repository.LibraryRepository;
 
 public class ReadingSyncService extends Service {
 
@@ -29,10 +29,11 @@ public class ReadingSyncService extends Service {
         final boolean saveLastBook = intent.getBooleanExtra(EXTRA_SAVE_LAST_BOOK, false);
 
         if (bookTitle != null) {
-            StorageManager.saveReadingProgress(this, bookTitle, progress);
+            LibraryRepository libraryRepository = new LibraryRepository(this);
+            libraryRepository.saveReadingProgress(bookTitle, progress);
 
             if (saveLastBook) {
-                StorageManager.saveLastBook(this, bookTitle);
+                libraryRepository.saveLastBook(bookTitle);
             }
 
             Log.d(TAG, "Synced progress for " + bookTitle + ": " + progress + "%");

@@ -1,12 +1,18 @@
-package com.hcmute.bookreadingapp;
+package com.hcmute.bookreadingapp.view.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.material.button.MaterialButton;
+import com.hcmute.bookreadingapp.R;
+import com.hcmute.bookreadingapp.model.Book;
 
 public class BookDetailActivity extends AppCompatActivity {
+
+    public static final String EXTRA_BOOK = "book";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,8 +24,7 @@ public class BookDetailActivity extends AppCompatActivity {
         TextView tvDescription = findViewById(R.id.tv_detail_description);
         MaterialButton btnReadNow = findViewById(R.id.btn_read_now);
 
-        // Lấy dữ liệu sách từ Intent
-        com.hcmute.bookreadingapp.model.Book book = (com.hcmute.bookreadingapp.model.Book) getIntent().getSerializableExtra("book");
+        Book book = (Book) getIntent().getSerializableExtra(EXTRA_BOOK);
 
         if (book != null) {
             tvTitle.setText(book.getTitle() != null ? book.getTitle() : "Tên cuốn sách");
@@ -30,7 +35,7 @@ public class BookDetailActivity extends AppCompatActivity {
         btnReadNow.setOnClickListener(v -> {
             Intent intent = new Intent(BookDetailActivity.this, ReadingActivity.class);
             if (book != null) {
-                intent.putExtra("book", book);
+                intent.putExtra(ReadingActivity.EXTRA_BOOK, book);
             }
             startActivity(intent);
         });

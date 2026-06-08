@@ -1,4 +1,4 @@
-package com.hcmute.bookreadingapp;
+package com.hcmute.bookreadingapp.view.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,39 +7,48 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
-import com.hcmute.bookreadingapp.data.repository.BookRepository;
+
+import com.hcmute.bookreadingapp.R;
+import com.hcmute.bookreadingapp.controller.BookController;
 import com.hcmute.bookreadingapp.model.Book;
 import com.hcmute.bookreadingapp.model.FeaturedBook;
-import com.hcmute.bookreadingapp.ui.adapter.BookAdapter;
-import com.hcmute.bookreadingapp.ui.adapter.FeaturedBookAdapter;
+import com.hcmute.bookreadingapp.view.activity.AudioPlayerActivity;
+import com.hcmute.bookreadingapp.view.activity.BookDetailActivity;
+import com.hcmute.bookreadingapp.view.adapter.BookAdapter;
+import com.hcmute.bookreadingapp.view.adapter.FeaturedBookAdapter;
 
 import java.util.List;
 
 public class BooksFragment extends Fragment {
 
-    private RecyclerView rvBooks;
+    private static final String TAG = "BooksFragment";
+
     private ViewPager2 vpFeatured;
     private BookAdapter bookAdapter;
     private FeaturedBookAdapter featuredBookAdapter;
-    private BookRepository bookRepository;
+    private BookController bookController;
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_books, container, false);
 
-        rvBooks = view.findViewById(R.id.rv_books);
+        RecyclerView rvBooks = view.findViewById(R.id.rv_books);
         vpFeatured = view.findViewById(R.id.vp_featured);
+
+        bookController = new BookController();
 
         bookAdapter = new BookAdapter(book -> {
             Intent intent = new Intent(getActivity(), BookDetailActivity.class);
-            intent.putExtra("book", book);
+            intent.putExtra(BookDetailActivity.EXTRA_BOOK, book);
             startActivity(intent);
         });
 
@@ -55,23 +64,21 @@ public class BooksFragment extends Fragment {
 
             @Override
             public void onCardClick(FeaturedBook featuredBook) {
-                if (featuredBook.getBookId() != null && !featuredBook.getBookId().isEmpty()) {
-                    bookRepository.getBookById(featuredBook.getBookId(), new BookRepository.OnBookFetchedListener() {
-                        @Override
-                        public void onSuccess(Book book) {
-                            Intent intent = new Intent(getActivity(), BookDetailActivity.class);
-                            intent.putExtra("book", book);
-                            startActivity(intent);
-                        }
+                bookController.loadBookById(featuredBook.getBookId(), new BookController.BookDetailCallback() {
+                    @Override
+                    public void onSuccess(Book book) {
+                        Intent intent = new Intent(getActivity(), BookDetailActivity.class);
+                        intent.putExtra(BookDetailActivity.EXTRA_BOOK, book);
+                        startActivity(intent);
+                    }
 
-                        @Override
-                        public void onFailure(Exception e) {
-                            if (getContext() != null) {
-                                Toast.makeText(getContext(), "Không tìm thấy sách", Toast.LENGTH_SHORT).show();
-                            }
+                    @Override
+                    public void onError(String message) {
+                        if (getContext() != null) {
+                            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
                         }
-                    });
-                }
+                    }
+                });
             }
         });
 
@@ -79,10 +86,7 @@ public class BooksFragment extends Fragment {
         rvBooks.setAdapter(bookAdapter);
 
         setupFeaturedCarousel();
-
-        bookRepository = new BookRepository();
-        fetchBooks();
-        fetchFeaturedBooks();
+        loadBooks();
 
         return view;
     }
@@ -111,38 +115,36 @@ public class BooksFragment extends Fragment {
         });
     }
 
-    private void fetchBooks() {
-        bookRepository.getAllBooks(new BookRepository.OnBooksFetchedListener() {
+    private void loadBooks() {
+        bookController.loadAllBooks(new BookController.BooksCallback() {
             @Override
             public void onSuccess(List<Book> books) {
                 bookAdapter.setBookList(books);
-                Log.d("BooksFragment", "Loaded " + books.size() + " books");
+                Log.d(TAG, "Loaded " + books.size() + " books");
             }
 
             @Override
-            public void onFailure(Exception e) {
+            public void onError(String message) {
                 if (getContext() != null) {
-                    Toast.makeText(getContext(), "Lỗi tải sách: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Lỗi tải sách: " + message, Toast.LENGTH_SHORT).show();
                 }
             }
         });
-    }
 
-    private void fetchFeaturedBooks() {
-        bookRepository.getFeaturedBooks(new BookRepository.OnFeaturedBooksFetchedListener() {
+        bookController.loadFeaturedBooks(new BookController.FeaturedBooksCallback() {
             @Override
             public void onSuccess(List<FeaturedBook> books) {
                 featuredBookAdapter.setFeaturedBooks(books);
                 if (!books.isEmpty()) {
                     vpFeatured.setCurrentItem(0, false);
                 }
-                Log.d("BooksFragment", "Loaded " + books.size() + " featured books");
+                Log.d(TAG, "Loaded " + books.size() + " featured books");
             }
 
             @Override
-            public void onFailure(Exception e) {
+            public void onError(String message) {
                 if (getContext() != null) {
-                    Toast.makeText(getContext(), "Lỗi tải sách nổi bật: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Lỗi tải sách nổi bật: " + message, Toast.LENGTH_SHORT).show();
                 }
             }
         });

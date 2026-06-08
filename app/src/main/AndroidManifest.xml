@@ -17,9 +17,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BookReadingApp">
 
-        <!-- Màn hình Đăng nhập (Launcher) -->
         <activity
-            android:name=".LoginActivity"
+            android:name=".view.activity.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,28 +26,17 @@
             </intent-filter>
         </activity>
 
-        <!-- Màn hình chính -->
-        <activity android:name=".MainActivity" android:exported="false" />
-
-        <!-- Màn hình Đăng ký -->
-        <activity android:name=".RegisterActivity" android:exported="false" />
-
-        <!-- Màn hình Chi tiết sách -->
-        <activity android:name=".BookDetailActivity" android:exported="false" />
-
-        <!-- Màn hình Đọc sách -->
-        <activity android:name=".ReadingActivity" android:exported="false" />
-
-        <!-- Màn hình Nghe sách -->
-        <activity android:name=".AudioPlayerActivity" android:exported="false" />
+        <activity android:name=".view.activity.MainActivity" android:exported="false" />
+        <activity android:name=".view.activity.RegisterActivity" android:exported="false" />
+        <activity android:name=".view.activity.BookDetailActivity" android:exported="false" />
+        <activity android:name=".view.activity.ReadingActivity" android:exported="false" />
+        <activity android:name=".view.activity.AudioPlayerActivity" android:exported="false" />
+        <activity android:name=".view.activity.PodCourseDetailActivity" android:exported="false" />
 
         <service
             android:name=".service.AudioService"
             android:exported="false"
             android:foregroundServiceType="mediaPlayback" />
-
-        <!-- Màn hình Chi tiết PodCourse -->
-        <activity android:name=".PodCourseDetailActivity" android:exported="false" />
 
     </application>
 
