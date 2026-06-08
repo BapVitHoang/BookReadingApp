@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.hcmute.bookreadingapp.R;
 import com.hcmute.bookreadingapp.model.Book;
 
@@ -45,8 +46,17 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
         holder.tvTitle.setText(book.getTitle());
         holder.tvAuthor.setText(book.getAuthor());
 
-        // TODO: Sử dụng thư viện Glide hoặc Picasso để load ảnh từ book.getCoverUrl() vào holder.imgCover
-        // Tạm thời mình bỏ qua load ảnh để bạn dễ hiểu logic cơ bản trước.
+        // Load ảnh cover từ URL (internet) bằng Glide
+        if (book.getCoverUrl() != null && !book.getCoverUrl().isEmpty()) {
+            Glide.with(holder.itemView.getContext())
+                    .load(book.getCoverUrl())
+                    .centerCrop()
+                    .placeholder(android.R.drawable.ic_menu_gallery)
+                    .error(android.R.drawable.ic_menu_report_image)
+                    .into(holder.imgCover);
+        } else {
+            holder.imgCover.setImageResource(android.R.drawable.ic_menu_gallery);
+        }
 
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {

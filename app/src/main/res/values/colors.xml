@@ -23,4 +23,6 @@
     <color name="sepia_bg">#F4ECD8</color>
     <color name="sepia_text">#5B4636</color>
     <color name="soft_shadow">#1A000000</color>
+    <color name="brand_best_seller_banner">#9E2B2B</color>
+    <color name="mini_player_pink">#F8E8E8</color>
 </resources>
