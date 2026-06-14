@@ -202,7 +202,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
         });
     }
 
-    private void togglePlayback() {
+    private void togglePlayback() {   //start 
         AudioTrack track = new AudioTrack(audioUrl, title, coverUrl, "Đang phát sách nói");
         if (!track.hasAudioUrl()) {
             Toast.makeText(this, "Chưa có link audio cho sách này", Toast.LENGTH_SHORT).show();

@@ -6,8 +6,12 @@
     android:paddingHorizontal="6dp">
 
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_featured_book"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
         app:cardCornerRadius="16dp"
         app:cardElevation="4dp">
 

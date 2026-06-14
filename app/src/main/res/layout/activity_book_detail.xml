@@ -6,12 +6,14 @@
     android:background="@color/brand_navy">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/detail_app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         app:elevation="0dp">
 
         <androidx.appcompat.widget.Toolbar
+            android:id="@+id/detail_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:navigationIcon="@android:drawable/ic_menu_revert"
@@ -39,6 +41,7 @@
                 app:cardCornerRadius="16dp"
                 app:cardElevation="12dp">
                 <ImageView
+                    android:id="@+id/img_detail_cover"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="#DDD"

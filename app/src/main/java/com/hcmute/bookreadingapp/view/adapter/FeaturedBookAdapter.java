@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hcmute.bookreadingapp.R;
 import com.hcmute.bookreadingapp.model.FeaturedBook;
@@ -67,11 +68,13 @@ public class FeaturedBookAdapter extends RecyclerView.Adapter<FeaturedBookAdapte
             }
         });
 
-        holder.itemView.setOnClickListener(v -> {
+        View.OnClickListener openDetailListener = v -> {
             if (listener != null) {
                 listener.onCardClick(book);
             }
-        });
+        };
+        holder.cardFeatured.setOnClickListener(openDetailListener);
+        holder.imgCover.setOnClickListener(openDetailListener);
     }
 
     @Override
@@ -80,12 +83,14 @@ public class FeaturedBookAdapter extends RecyclerView.Adapter<FeaturedBookAdapte
     }
 
     static class FeaturedViewHolder extends RecyclerView.ViewHolder {
+        MaterialCardView cardFeatured;
         ImageView imgCover;
         LinearLayout layoutBestSeller;
         FloatingActionButton btnPlay;
 
         FeaturedViewHolder(@NonNull View itemView) {
             super(itemView);
+            cardFeatured = itemView.findViewById(R.id.card_featured_book);
             imgCover = itemView.findViewById(R.id.img_featured_cover);
             layoutBestSeller = itemView.findViewById(R.id.layout_best_seller);
             btnPlay = itemView.findViewById(R.id.btn_play_featured);

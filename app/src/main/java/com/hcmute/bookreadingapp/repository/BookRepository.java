@@ -66,6 +66,13 @@ public class BookRepository {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             FeaturedBook featuredBook = document.toObject(FeaturedBook.class);
                             featuredBook.setId(document.getId());
+                            if (featuredBook.getBookId() == null || featuredBook.getBookId().isEmpty()) {
+                                String bookId = document.getString("book_id");
+                                if (bookId == null || bookId.isEmpty()) {
+                                    bookId = document.getString("bookId");
+                                }
+                                featuredBook.setBookId(bookId);
+                            }
                             featuredList.add(featuredBook);
                         }
                         listener.onSuccess(featuredList);

@@ -24,6 +24,7 @@ import com.hcmute.bookreadingapp.view.activity.BookDetailActivity;
 import com.hcmute.bookreadingapp.view.adapter.BookAdapter;
 import com.hcmute.bookreadingapp.view.adapter.FeaturedBookAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BooksFragment extends Fragment {
@@ -34,6 +35,7 @@ public class BooksFragment extends Fragment {
     private BookAdapter bookAdapter;
     private FeaturedBookAdapter featuredBookAdapter;
     private BookController bookController;
+    private List<Book> allBooks = new ArrayList<>();
 
     @Nullable
     @Override
@@ -46,11 +48,7 @@ public class BooksFragment extends Fragment {
 
         bookController = new BookController();
 
-        bookAdapter = new BookAdapter(book -> {
-            Intent intent = new Intent(getActivity(), BookDetailActivity.class);
-            intent.putExtra(BookDetailActivity.EXTRA_BOOK, book);
-            startActivity(intent);
-        });
+        bookAdapter = new BookAdapter(this::openBookDetail);
 
         featuredBookAdapter = new FeaturedBookAdapter(new FeaturedBookAdapter.OnFeaturedBookListener() {
             @Override
@@ -64,21 +62,7 @@ public class BooksFragment extends Fragment {
 
             @Override
             public void onCardClick(FeaturedBook featuredBook) {
-                bookController.loadBookById(featuredBook.getBookId(), new BookController.BookDetailCallback() {
-                    @Override
-                    public void onSuccess(Book book) {
-                        Intent intent = new Intent(getActivity(), BookDetailActivity.class);
-                        intent.putExtra(BookDetailActivity.EXTRA_BOOK, book);
-                        startActivity(intent);
-                    }
-
-                    @Override
-                    public void onError(String message) {
-                        if (getContext() != null) {
-                            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+                openBookDetail(toBook(featuredBook));
             }
         });
 
@@ -119,6 +103,7 @@ public class BooksFragment extends Fragment {
         bookController.loadAllBooks(new BookController.BooksCallback() {
             @Override
             public void onSuccess(List<Book> books) {
+                allBooks = books;
                 bookAdapter.setBookList(books);
                 Log.d(TAG, "Loaded " + books.size() + " books");
             }
@@ -148,5 +133,57 @@ public class BooksFragment extends Fragment {
                 }
             }
         });
+    }
+
+    private void openBookDetail(Book book) {
+        if (getActivity() == null || book == null) {
+            return;
+        }
+        Intent intent = new Intent(getActivity(), BookDetailActivity.class);
+        intent.putExtra(BookDetailActivity.EXTRA_BOOK, book);
+        startActivity(intent);
+    }
+
+    private Book toBook(FeaturedBook featuredBook) {
+        if (featuredBook == null) {
+            return new Book();
+        }
+
+        Book matchedBook = findBookForFeatured(featuredBook);
+        if (matchedBook != null) {
+            return matchedBook;
+        }
+
+        Book book = new Book();
+        book.setId(featuredBook.getBookId());
+        book.setTitle(featuredBook.getTitle());
+        book.setCoverUrl(featuredBook.getCoverUrl());
+        return book;
+    }
+
+    private Book findBookForFeatured(FeaturedBook featuredBook) {
+        if (featuredBook == null || allBooks.isEmpty()) {
+            return null;
+        }
+
+        String bookId = featuredBook.getBookId();
+        String title = featuredBook.getTitle();
+
+        for (Book book : allBooks) {
+            if (bookId != null && !bookId.isEmpty() && bookId.equals(book.getId())) {
+                return book;
+            }
+            if (titlesMatch(title, book.getTitle())) {
+                return book;
+            }
+        }
+        return null;
+    }
+
+    private boolean titlesMatch(String left, String right) {
+        if (left == null || right == null) {
+            return false;
+        }
+        return left.trim().equalsIgnoreCase(right.trim());
     }
 }

@@ -5,36 +5,16 @@
     android:layout_height="match_parent"
     android:background="@color/sepia_bg">
 
-    <!-- Top Overlay (Hideable) -->
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/reading_app_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#CCFFFFFF"
-        app:layout_constraintTop_toTopOf="parent">
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/reading_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:navigationIcon="@android:drawable/ic_menu_revert"
-            app:navigationIconTint="@color/brand_text_navy">
-            <TextView
-                android:id="@+id/tv_reading_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Chương 1: Khởi đầu"
-                android:textColor="@color/brand_text_navy"
-                android:textStyle="bold" />
-        </androidx.appcompat.widget.Toolbar>
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <!-- Reading Content -->
+    <!-- Reading Content (behind overlays) -->
     <androidx.core.widget.NestedScrollView
         android:id="@+id/readingScrollView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="24dp">
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -55,15 +35,46 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
+    <!-- Top Overlay (Hideable) -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/reading_app_bar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#CCFFFFFF"
+        android:elevation="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/reading_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:navigationIcon="@android:drawable/ic_menu_revert"
+            app:navigationIconTint="@color/brand_text_navy">
+
+            <TextView
+                android:id="@+id/tv_reading_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Chương 1: Khởi đầu"
+                android:textColor="@color/brand_text_navy"
+                android:textStyle="bold" />
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
     <!-- Bottom Overlay (Hideable) -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/reading_footer"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         app:cardCornerRadius="20dp"
         app:cardElevation="8dp"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"

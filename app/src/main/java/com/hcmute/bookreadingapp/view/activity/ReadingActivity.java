@@ -9,6 +9,10 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.core.widget.NestedScrollView;
 
 import com.hcmute.bookreadingapp.R;
@@ -44,7 +48,14 @@ public class ReadingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         setContentView(R.layout.activity_reading);
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.reading_app_bar), (view, windowInsets) -> {
+            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars());
+            view.setPadding(0, insets.top, 0, 0);
+            return windowInsets;
+        });
 
         libraryController = new LibraryController(this);
         book = (Book) getIntent().getSerializableExtra(EXTRA_BOOK);
