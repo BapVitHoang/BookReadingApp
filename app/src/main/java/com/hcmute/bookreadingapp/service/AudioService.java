@@ -2,6 +2,7 @@ package com.hcmute.bookreadingapp.service;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.media.AudioAttributes;
@@ -15,7 +16,10 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
 import com.hcmute.bookreadingapp.R;
+import com.hcmute.bookreadingapp.receiver.AudioControlReceiver;
 import com.hcmute.bookreadingapp.util.AudioUrlUtils;
+import com.hcmute.bookreadingapp.util.PlaybackBroadcast;
+import com.hcmute.bookreadingapp.view.activity.AudioPlayerActivity;
 
 import java.io.IOException;
 
@@ -29,6 +33,10 @@ public class AudioService extends Service {
     private static final String TAG = "AudioService";
     private static final String CHANNEL_ID = "audio_service_channel";
     private static final int NOTIFICATION_ID = 1;
+    private static final int REQUEST_CODE_OPEN_PLAYER = 100;
+    private static final int REQUEST_CODE_PLAY = 101;
+    private static final int REQUEST_CODE_PAUSE = 102;
+    private static final int REQUEST_CODE_REWIND = 103;
 
     private MediaPlayer mediaPlayer;
     private final IBinder binder = new AudioBinder();
@@ -68,6 +76,23 @@ public class AudioService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         startForeground(NOTIFICATION_ID, createNotification());
 
+        if (intent != null && intent.getAction() != null) {
+            switch (intent.getAction()) {
+                case AudioControlReceiver.ACTION_PLAY:
+                    playAudio();
+                    return START_STICKY;
+                case AudioControlReceiver.ACTION_PAUSE:
+                    pauseAudio();
+                    return START_STICKY;
+                case AudioControlReceiver.ACTION_REWIND:
+                    rewind15Seconds();
+                    notifyPlaybackStateChanged();
+                    return START_STICKY;
+                default:
+                    break;
+            }
+        }
+
         if (intent != null) {
             String audioUrl = intent.getStringExtra(EXTRA_AUDIO_URL);
             String title = intent.getStringExtra(EXTRA_TITLE);
@@ -86,6 +111,7 @@ public class AudioService extends Service {
             if (audioUrl != null && !audioUrl.isEmpty()) {
                 originalAudioUrl = audioUrl;
                 playWhenPrepared = true;
+                updateNotification();
                 prepareAudio(audioUrl);
             }
         }
@@ -132,15 +158,11 @@ public class AudioService extends Service {
                     mp.start();
                     playWhenPrepared = false;
                 }
-                if (playbackListener != null) {
-                    playbackListener.onPrepared(mp.getDuration());
-                }
+                notifyPrepared(mp.getDuration());
                 notifyPlaybackStateChanged();
             });
             mediaPlayer.setOnCompletionListener(mp -> {
-                if (playbackListener != null) {
-                    playbackListener.onPlaybackComplete();
-                }
+                notifyPlaybackComplete();
                 notifyPlaybackStateChanged();
             });
             mediaPlayer.setOnErrorListener((mp, what, extra) -> {
@@ -234,26 +256,115 @@ public class AudioService extends Service {
         return isPrepared && mediaPlayer != null;
     }
 
-    private void notifyPlaybackStateChanged() {
+    private void notifyPrepared(int duration) {
         if (playbackListener != null) {
-            playbackListener.onPlaybackStateChanged(isPlaying());
+            playbackListener.onPrepared(duration);
         }
+        PlaybackBroadcast.sendPrepared(
+                this,
+                duration,
+                currentTitle,
+                currentSubtitle,
+                currentCoverUrl
+        );
+    }
+
+    private void notifyPlaybackComplete() {
+        if (playbackListener != null) {
+            playbackListener.onPlaybackComplete();
+        }
+        PlaybackBroadcast.sendComplete(this);
+    }
+
+    private void notifyPlaybackStateChanged() {
+        boolean playing = isPlaying();
+        if (playbackListener != null) {
+            playbackListener.onPlaybackStateChanged(playing);
+        }
+        PlaybackBroadcast.sendStateChanged(this, playing);
     }
 
     private void notifyError(String message) {
         if (playbackListener != null) {
             playbackListener.onError(message);
         }
+        PlaybackBroadcast.sendError(this, message);
     }
 
     private android.app.Notification createNotification() {
-        return new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("BookReadingApp")
-                .setContentText(currentTitle)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle(currentTitle)
+                .setContentText(currentSubtitle)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setOngoing(true)
-                .build();
+                .setContentIntent(createOpenPlayerPendingIntent())
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+
+        builder.addAction(createRewindAction());
+
+        if (isPlaying()) {
+            builder.addAction(createPauseAction());
+        } else {
+            builder.addAction(createPlayAction());
+        }
+
+        return builder.build();
+    }
+
+    private PendingIntent createOpenPlayerPendingIntent() {
+        Intent openIntent = new Intent(this, AudioPlayerActivity.class);
+        if (originalAudioUrl != null) {
+            openIntent.putExtra(AudioPlayerActivity.EXTRA_AUDIO_URL, originalAudioUrl);
+        }
+        openIntent.putExtra(AudioPlayerActivity.EXTRA_TITLE, currentTitle);
+        if (currentCoverUrl != null) {
+            openIntent.putExtra(AudioPlayerActivity.EXTRA_COVER_URL, currentCoverUrl);
+        }
+        openIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+        return PendingIntent.getActivity(
+                this,
+                REQUEST_CODE_OPEN_PLAYER,
+                openIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
+    }
+
+    private NotificationCompat.Action createPlayAction() {
+        return new NotificationCompat.Action(
+                android.R.drawable.ic_media_play,
+                getString(R.string.notification_play),
+                createControlPendingIntent(AudioControlReceiver.ACTION_PLAY, REQUEST_CODE_PLAY)
+        );
+    }
+
+    private NotificationCompat.Action createPauseAction() {
+        return new NotificationCompat.Action(
+                android.R.drawable.ic_media_pause,
+                getString(R.string.notification_pause),
+                createControlPendingIntent(AudioControlReceiver.ACTION_PAUSE, REQUEST_CODE_PAUSE)
+        );
+    }
+
+    private NotificationCompat.Action createRewindAction() {
+        return new NotificationCompat.Action(
+                R.drawable.ic_rewind_15,
+                getString(R.string.notification_rewind),
+                createControlPendingIntent(AudioControlReceiver.ACTION_REWIND, REQUEST_CODE_REWIND)
+        );
+    }
+
+    private PendingIntent createControlPendingIntent(String action, int requestCode) {
+        Intent controlIntent = new Intent(this, AudioControlReceiver.class);
+        controlIntent.setAction(action);
+
+        return PendingIntent.getBroadcast(
+                this,
+                requestCode,
+                controlIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
     }
 
     private void updateNotification() {
@@ -267,7 +378,7 @@ public class AudioService extends Service {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(
                     CHANNEL_ID,
-                    "Audio Service Channel",
+                    getString(R.string.notification_channel_name),
                     NotificationManager.IMPORTANCE_LOW
             );
 

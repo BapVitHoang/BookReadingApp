@@ -13,6 +13,7 @@
         android:background="#CCFFFFFF"
         app:layout_constraintTop_toTopOf="parent">
         <androidx.appcompat.widget.Toolbar
+            android:id="@+id/reading_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:navigationIcon="@android:drawable/ic_menu_revert"
@@ -87,6 +88,7 @@
                     android:id="@+id/btn_font_settings"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
+                    android:contentDescription="@string/reading_font_size"
                     android:src="@android:drawable/ic_menu_sort_by_size"
                     app:tint="@color/brand_text_navy" />
 
@@ -100,9 +102,11 @@
                     android:textSize="12sp" />
 
                 <ImageView
+                    android:id="@+id/btn_favorite"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_alignParentEnd="true"
+                    android:contentDescription="@string/reading_favorite"
                     android:src="@android:drawable/btn_star_big_off"
                     app:tint="@color/brand_text_navy" />
             </RelativeLayout>

@@ -37,7 +37,6 @@ public class AuthController {
 
             @Override
             public void onError(Exception e) {
-                // Firebase không phân biệt sai email hay sai mật khẩu (vì lý do bảo mật)
                 callback.onError("Email hoặc mật khẩu không đúng");
             }
         });

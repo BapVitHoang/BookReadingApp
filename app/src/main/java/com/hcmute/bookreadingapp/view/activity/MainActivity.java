@@ -1,6 +1,7 @@
 package com.hcmute.bookreadingapp.view.activity;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
@@ -22,7 +24,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
 import com.hcmute.bookreadingapp.R;
 import com.hcmute.bookreadingapp.controller.AudioPlaybackController;
+import com.hcmute.bookreadingapp.receiver.PlaybackStateReceiver;
 import com.hcmute.bookreadingapp.service.AudioService;
+import com.hcmute.bookreadingapp.util.PlaybackBroadcast;
 import com.hcmute.bookreadingapp.view.fragment.BooksFragment;
 import com.hcmute.bookreadingapp.view.fragment.ChallengesFragment;
 import com.hcmute.bookreadingapp.view.fragment.ExploreFragment;
@@ -41,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton btnMiniPlayPause;
 
     private AudioPlaybackController playbackController;
+    private PlaybackStateReceiver playbackStateReceiver;
+    private boolean playbackReceiverRegistered;
 
     private final Handler uiHandler = new Handler(Looper.getMainLooper());
     private final Runnable progressUpdater = new Runnable() {
@@ -56,47 +62,48 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    private final AudioService.PlaybackListener playbackListener = new AudioService.PlaybackListener() {
-        @Override
-        public void onPrepared(int duration) {
-            runOnUiThread(() -> {
-                updateMiniPlayer();
-                updateMiniPlayerProgress(0, duration);
-            });
-        }
-
-        @Override
-        public void onError(String message) {
-            runOnUiThread(() -> hideMiniPlayer());
-        }
-
-        @Override
-        public void onPlaybackComplete() {
-            runOnUiThread(() -> {
-                uiHandler.removeCallbacks(progressUpdater);
-                hideMiniPlayer();
-            });
-        }
-
-        @Override
-        public void onPlaybackStateChanged(boolean isPlaying) {
-            runOnUiThread(() -> {
-                updateMiniPlayerPlayButton(isPlaying);
-                if (isPlaying) {
-                    uiHandler.post(progressUpdater);
-                } else {
-                    uiHandler.removeCallbacks(progressUpdater);
-                    AudioService service = playbackController.getService();
-                    if (service != null) {
-                        updateMiniPlayerProgress(
-                                service.getCurrentPosition(),
-                                service.getDuration()
-                        );
-                    }
+    private final PlaybackStateReceiver.Listener playbackBroadcastListener =
+            new PlaybackStateReceiver.Listener() {
+                @Override
+                public void onPrepared(int duration, String title, String subtitle, String coverUrl) {
+                    runOnUiThread(() -> {
+                        showMiniPlayer(title, subtitle, coverUrl);
+                        updateMiniPlayerProgress(0, duration);
+                    });
                 }
-            });
-        }
-    };
+
+                @Override
+                public void onStateChanged(boolean isPlaying) {
+                    runOnUiThread(() -> {
+                        updateMiniPlayerPlayButton(isPlaying);
+                        if (isPlaying) {
+                            uiHandler.post(progressUpdater);
+                        } else {
+                            uiHandler.removeCallbacks(progressUpdater);
+                            AudioService service = playbackController.getService();
+                            if (service != null) {
+                                updateMiniPlayerProgress(
+                                        service.getCurrentPosition(),
+                                        service.getDuration()
+                                );
+                            }
+                        }
+                    });
+                }
+
+                @Override
+                public void onComplete() {
+                    runOnUiThread(() -> {
+                        uiHandler.removeCallbacks(progressUpdater);
+                        hideMiniPlayer();
+                    });
+                }
+
+                @Override
+                public void onError(String message) {
+                    runOnUiThread(() -> hideMiniPlayer());
+                }
+            };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +112,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         playbackController = new AudioPlaybackController(this);
+        playbackStateReceiver = new PlaybackStateReceiver();
+        playbackStateReceiver.setListener(playbackBroadcastListener);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.fragment_container), (view, windowInsets) -> {
             Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars());
@@ -182,10 +191,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        registerPlaybackReceiver();
         playbackController.bind(new AudioPlaybackController.ServiceCallback() {
             @Override
             public void onServiceConnected(AudioService service) {
-                service.setPlaybackListener(playbackListener);
                 updateMiniPlayer();
             }
 
@@ -201,7 +210,36 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         uiHandler.removeCallbacks(progressUpdater);
+        unregisterPlaybackReceiver();
         playbackController.unbind();
+    }
+
+    private void registerPlaybackReceiver() {
+        if (playbackReceiverRegistered) {
+            return;
+        }
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(PlaybackBroadcast.ACTION_PREPARED);
+        filter.addAction(PlaybackBroadcast.ACTION_STATE_CHANGED);
+        filter.addAction(PlaybackBroadcast.ACTION_COMPLETE);
+        filter.addAction(PlaybackBroadcast.ACTION_ERROR);
+
+        ContextCompat.registerReceiver(
+                this,
+                playbackStateReceiver,
+                filter,
+                ContextCompat.RECEIVER_NOT_EXPORTED
+        );
+        playbackReceiverRegistered = true;
+    }
+
+    private void unregisterPlaybackReceiver() {
+        if (!playbackReceiverRegistered) {
+            return;
+        }
+        unregisterReceiver(playbackStateReceiver);
+        playbackReceiverRegistered = false;
     }
 
     private void updateMiniPlayer() {
@@ -211,19 +249,25 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        miniPlayer.setVisibility(View.VISIBLE);
-        tvMiniTitle.setText(service.getCurrentTitle());
-        tvMiniSubtitle.setText(service.getCurrentSubtitle());
+        showMiniPlayer(
+                service.getCurrentTitle(),
+                service.getCurrentSubtitle(),
+                service.getCurrentCoverUrl()
+        );
         updateMiniPlayerPlayButton(service.isPlaying());
-
         updateMiniPlayerProgress(service.getCurrentPosition(), service.getDuration());
 
         if (service.isPlaying()) {
             uiHandler.removeCallbacks(progressUpdater);
             uiHandler.post(progressUpdater);
         }
+    }
 
-        String coverUrl = service.getCurrentCoverUrl();
+    private void showMiniPlayer(String title, String subtitle, String coverUrl) {
+        miniPlayer.setVisibility(View.VISIBLE);
+        tvMiniTitle.setText(title != null ? title : "");
+        tvMiniSubtitle.setText(subtitle != null ? subtitle : "");
+
         if (coverUrl != null && !coverUrl.isEmpty()) {
             Glide.with(this)
                     .load(coverUrl)

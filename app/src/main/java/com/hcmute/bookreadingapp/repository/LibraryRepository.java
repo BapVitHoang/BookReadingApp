@@ -3,6 +3,10 @@ package com.hcmute.bookreadingapp.repository;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.util.ArrayList;import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Lưu trữ tiến độ đọc, yêu thích và sách mở gần đây (local).
  */
@@ -50,5 +54,29 @@ public class LibraryRepository {
 
     public boolean hasRecentBook() {
         return !DEFAULT_LAST_BOOK.equals(getLastBook());
+    }
+
+    public List<String> getFavoriteBookTitles() {
+        List<String> titles = new ArrayList<>();
+        for (Map.Entry<String, ?> entry : prefs.getAll().entrySet()) {
+            if (entry.getKey().startsWith("favorite_")
+                    && Boolean.TRUE.equals(entry.getValue())) {
+                titles.add(entry.getKey().substring("favorite_".length()));
+            }
+        }
+        return titles;
+    }
+
+    public Map<String, Integer> getReadingProgressMap() {
+        Map<String, Integer> progressMap = new LinkedHashMap<>();
+        for (Map.Entry<String, ?> entry : prefs.getAll().entrySet()) {
+            if (entry.getKey().startsWith("progress_")
+                    && entry.getValue() instanceof Integer) {
+                int progress = (Integer) entry.getValue();
+                if (progress > 0) {
+                    progressMap.put(entry.getKey().substring("progress_".length()), progress);
+                }
+            }        }
+        return progressMap;
     }
 }

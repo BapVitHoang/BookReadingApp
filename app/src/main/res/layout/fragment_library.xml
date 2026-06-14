@@ -16,7 +16,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingHorizontal="20dp"
-            android:paddingTop="20dp">
+            android:paddingTop="20dp"
+            android:paddingBottom="12dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -25,83 +26,18 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Thư viện"
+                    android:text="@string/library_title"
                     android:textColor="@color/white"
                     android:textSize="24sp"
                     android:textStyle="bold" />
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
                     android:layout_alignParentEnd="true"
-                    android:gravity="center_vertical">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_marginEnd="16dp"
-                        android:src="@android:drawable/ic_menu_search"
-                        app:tint="@color/white" />
-
-                    <com.google.android.material.imageview.ShapeableImageView
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:src="@android:drawable/ic_menu_myplaces"
-                        app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full" />
-                </LinearLayout>
+                    android:src="@android:drawable/ic_menu_myplaces"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full" />
             </RelativeLayout>
-
-            <!-- Quick Action Icons -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <!-- Action 1 -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@android:drawable/ic_menu_save"
-                        app:tint="#80FFFFFF" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="Mua"
-                        android:textColor="#80FFFFFF"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
-                <!-- Action 2 -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@android:drawable/stat_sys_download"
-                        app:tint="#80FFFFFF" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="Đã tải"
-                        android:textColor="#80FFFFFF"
-                        android:textSize="12sp" />
-                </LinearLayout>
-            </LinearLayout>
         </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -114,30 +50,69 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:padding="40dp">
+            android:padding="20dp">
 
-            <ImageView
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:src="@android:drawable/ic_menu_send" />
+            <include
+                android:id="@+id/card_recent"
+                layout="@layout/card_library_recent"
+                android:visibility="gone" />
 
             <TextView
-                android:id="@+id/tv_recently_opened"
+                android:id="@+id/tv_empty_library"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="24dp"
+                android:text="@string/library_empty_hint"
+                android:textColor="@color/brand_text_gray"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tv_in_progress_header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Mở gần đây: Chưa có sách nào"
+                android:layout_marginBottom="8dp"
+                android:text="@string/library_in_progress"
                 android:textColor="@color/brand_text_navy"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_in_progress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:visibility="gone" />
 
             <TextView
+                android:id="@+id/tv_favorites_header"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:text="@string/library_favorites"
+                android:textColor="@color/brand_text_navy"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_favorites"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tv_favorites_empty"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Hãy bắt đầu khám phá kho sách của chúng tôi nhé!"
-                android:textColor="@color/brand_text_gray" />
+                android:text="@string/library_favorites_empty"
+                android:textColor="@color/brand_text_gray"
+                android:visibility="gone" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

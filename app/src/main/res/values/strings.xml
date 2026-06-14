@@ -1,3 +1,22 @@
 <resources>
     <string name="app_name">BookReadingApp</string>
+    <string name="notification_play">Phát</string>
+    <string name="notification_pause">Tạm dừng</string>
+    <string name="notification_rewind">Lùi 15 giây</string>
+    <string name="notification_channel_name">Phát audio sách nói</string>
+    <string name="reading_favorite">Yêu thích</string>
+    <string name="reading_font_size">Cỡ chữ</string>
+    <string name="reading_page_progress">Trang %1$d / %2$d</string>
+    <string name="reading_default_title">Đang đọc sách</string>
+    <string name="reading_empty_content">Nội dung cuốn sách đang được cập nhật...</string>
+    <string name="library_title">Thư viện</string>
+    <string name="library_continue_recent">Tiếp tục đọc gần đây</string>
+    <string name="library_continue_reading">Tiếp tục đọc</string>
+    <string name="library_continue_listening">Nghe sách</string>
+    <string name="library_in_progress">Đang đọc dở</string>
+    <string name="library_favorites">Yêu thích</string>
+    <string name="library_reading_percent">Đã đọc %1$d%%</string>
+    <string name="library_empty_hint">Hãy bắt đầu khám phá kho sách và đánh dấu yêu thích nhé!</string>
+    <string name="library_favorites_empty">Chưa có sách yêu thích. Bấm ngôi sao khi đọc sách để lưu vào đây.</string>
+    <string name="library_load_error">Không thể tải thư viện</string>
 </resources>

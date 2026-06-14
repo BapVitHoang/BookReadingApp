@@ -20,7 +20,6 @@ public class AuthRepository {
         void onError(Exception e);
     }
 
-    /** Còn user đang đăng nhập hay không (phiên do Firebase lưu trên thiết bị). */
     public boolean isLoggedIn() {
         return auth.getCurrentUser() != null;
     }

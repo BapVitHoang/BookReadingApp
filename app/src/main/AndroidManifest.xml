@@ -38,6 +38,20 @@
             android:exported="false"
             android:foregroundServiceType="mediaPlayback" />
 
+        <service
+            android:name=".service.ReadingSyncService"
+            android:exported="false" />
+
+        <receiver
+            android:name=".receiver.AudioControlReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.hcmute.bookreadingapp.action.AUDIO_PLAY" />
+                <action android:name="com.hcmute.bookreadingapp.action.AUDIO_PAUSE" />
+                <action android:name="com.hcmute.bookreadingapp.action.AUDIO_REWIND" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>
